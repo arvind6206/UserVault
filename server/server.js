@@ -22,7 +22,8 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://user-management-frontend.onrender.com",
   "https://user-management-frontend.vercel.app",
-  "https://user-management-frontend-ten.vercel.app"
+  "https://user-management-frontend-ten.vercel.app",
+  "https://user-management-frontend-ten.vercel.app/"
 ];
 
 app.use(
