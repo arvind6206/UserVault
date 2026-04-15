@@ -17,7 +17,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || "http://localhost:5173",
   "http://localhost:5173",
   "https://user-management-frontend.onrender.com",
-  "https://user-management-frontend.vercel.app"
+  "https://user-management-frontend.vercel.app",
+  "https://your-actual-vercel-url.vercel.app"
 ];
 
 app.use(
