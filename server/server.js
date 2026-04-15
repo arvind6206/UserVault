@@ -10,7 +10,11 @@ dotenv.config();
 const app = express();
 
 // Connect to database
-connectDB();
+try {
+  connectDB();
+} catch (error) {
+  console.error('Database connection failed:', error);
+}
 
 // Middleware
 const allowedOrigins = [
