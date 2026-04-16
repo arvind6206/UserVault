@@ -10,6 +10,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user", // Default role
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -77,7 +78,7 @@ const Register = () => {
     
     if (!validateForm()) return;
     
-    await register(form.username, form.email, form.password);
+    await register(form.username, form.email, form.password, form.role);
   };
 
   const handleChange = (e) => {
@@ -287,6 +288,40 @@ const Register = () => {
               {validationErrors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.confirmPassword}</p>
               )}
+            </div>
+
+            {/* Role Selection Field */}
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                Select Your Role
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <select
+                  id="role"
+                  name="role"
+                  value={form.role}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors appearance-none"
+                  disabled={loading}
+                >
+                  <option value="user">User</option>
+                  <option value="manager">Manager</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p className="mt-1 text-sm text-gray-500">
+                Choose your account type. Admin and Manager roles have additional permissions.
+              </p>
             </div>
 
             {/* Submit Button */}

@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -20,6 +20,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: role || 'user', // Default to 'user' if no role provided
     });
     await user.save();
     res.status(201).json({
@@ -87,7 +88,7 @@ export const login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -109,16 +110,20 @@ export const login = async (req, res) => {
 };
 
 export const refreshToken = async (req, res) => {
+  console.log("Refresh token request - cookies:", req.cookies);
   const token = req.cookies.refreshToken;
 
   if (!token) {
+    console.log("No refresh token found in cookies");
     return res.status(401).json({ message: "No refresh token provided" });
   }
   try {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    console.log("Refresh token decoded:", decoded);
     const user = await User.findById(decoded.id);
 
     if (!user) {
+      console.log("User not found with ID:", decoded.id);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -148,7 +153,7 @@ export const logout = (req, res) => {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
     });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
